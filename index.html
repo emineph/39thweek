@@ -375,137 +375,301 @@
     </div>
 
     <script>
-        // Kategori Dağılım Grafiği
-        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
-        new Chart(categoryCtx, {
+        document.addEventListener('DOMContentLoaded', function() {
+    initializeCharts();
+    animateCounters();
+});
+
+function initializeCharts() {
+    // 1. Kategori Bazında Dağılım Grafiği (Doughnut)
+    const categoryCtx = document.getElementById('categoryChart');
+    if (categoryCtx) {
+        new Chart(categoryCtx.getContext('2d'), {
             type: 'doughnut',
             data: {
-                labels: ['Treyler', 'Şasi', 'Swap Body', 'Konteyner'],
+                labels: ['Treyler (117)', 'Şasi (58)', 'Swap Body (12)', 'Konteyner (3)'],
                 datasets: [{
-                    data: [133, 67, 12, 3],
-                    backgroundColor: ['#3498db', '#e74c3c', '#f39c12', '#27ae60'],
+                    label: 'Araç Sayısı',
+                    data: [117, 58, 12, 3],
+                    backgroundColor: [
+                        '#3498db', // Mavi - Treyler
+                        '#e74c3c', // Kırmızı - Şasi
+                        '#f39c12', // Turuncu - Swap Body
+                        '#27ae60'  // Yeşil - Konteyner
+                    ],
                     borderWidth: 3,
-                    borderColor: '#fff'
+                    borderColor: '#fff',
+                    hoverOffset: 10
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: true,
                 plugins: {
                     legend: {
-                        position: 'bottom'
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12,
+                                family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} araç (${percentage}%)`;
+                            }
+                        }
                     }
                 }
             }
         });
+    }
 
-        // Haftalık Trend Grafiği
-        const trendCtx = document.getElementById('trendChart').getContext('2d');
-        new Chart(trendCtx, {
+    // 2. Haftalık Tamamlanma Trendi (Line Chart)
+    const trendCtx = document.getElementById('trendChart');
+    if (trendCtx) {
+        new Chart(trendCtx.getContext('2d'), {
             type: 'line',
             data: {
-                labels: ['31.Hafta', '32.Hafta', '33.Hafta', '34.Hafta', '35.Hafta', '36.Hafta', '37.Hafta'],
+                labels: ['33.Hafta', '34.Hafta', '35.Hafta', '36.Hafta', '37.Hafta', '38.Hafta', '39.Hafta'],
                 datasets: [{
                     label: 'Tamamlanan İşlemler',
-                    data: [25, 10, 7, 12, 49, 40, 7],
+                    data: [7, 12, 49, 40, 7, 19, 7],
                     borderColor: '#3498db',
                     backgroundColor: 'rgba(52, 152, 219, 0.1)',
                     borderWidth: 3,
                     fill: true,
-                    tension: 0.4
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#3498db',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Tamamlanma Oranları
-        const completionCtx = document.getElementById('completionChart').getContext('2d');
-        new Chart(completionCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Treyler', 'Şasi', 'Swap Body', 'Konteyner'],
-                datasets: [{
-                    label: 'Tamamlanma Oranı (%)',
-                    data: [1.50, 7.46, 0.00, 0.00],
-                    backgroundColor: ['#e74c3c', '#e74c3c', '#e74c3c', '#e74c3c'],
-                    borderColor: ['#c0392b', '#c0392b', '#c0392b', '#c0392b'],
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        display: false
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 12,
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Tamamlanan: ${context.parsed.y} araç`;
+                            }
+                        }
                     }
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: 100
+                        ticks: {
+                            stepSize: 10,
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
                     }
                 }
             }
         });
+    }
 
-        // İşlem Türü Dağılımı
-        const typeCtx = document.getElementById('typeChart').getContext('2d');
-        new Chart(typeCtx, {
-            type: 'pie',
+    // 3. Tamamlanma Oranları (Bar Chart)
+    const completionCtx = document.getElementById('completionChart');
+    if (completionCtx) {
+        new Chart(completionCtx.getContext('2d'), {
+            type: 'bar',
             data: {
-                labels: ['Tamamlanan', 'Bekleyen'],
+                labels: ['Treyler', 'Şasi', 'Swap Body', 'Konteyner'],
                 datasets: [{
-                    data: [7, 208],
-                    backgroundColor: ['#27ae60', '#e74c3c'],
-                    borderWidth: 3,
-                    borderColor: '#fff'
+                    label: 'Tamamlanma Oranı (%)',
+                    data: [6.0, 0, 0, 0],
+                    backgroundColor: [
+                        '#e74c3c',
+                        '#c0392b',
+                        '#95a5a6',
+                        '#7f8c8d'
+                    ],
+                    borderColor: [
+                        '#c0392b',
+                        '#a93226',
+                        '#7f8c8d',
+                        '#626567'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 5
                 }]
             },
             options: {
                 responsive: true,
+                maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        position: 'bottom'
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return `Tamamlanma: ${context.parsed.y}%`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            },
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11
+                            }
+                        },
+                        grid: {
+                            display: false
+                        }
                     }
                 }
             }
         });
+    }
 
-        // Sayaç animasyonu
-        document.addEventListener('DOMContentLoaded', function() {
-            const counters = document.querySelectorAll('.stat-value');
-            
-            counters.forEach(counter => {
-                const target = parseInt(counter.textContent.replace(/[^0-9.]/g, ''));
-                const increment = target / 50;
-                let current = 0;
-                
-                const timer = setInterval(() => {
-                    current += increment;
-                    if (current >= target) {
-                        counter.textContent = counter.textContent;
-                        clearInterval(timer);
-                    } else {
-                        if (counter.textContent.includes('%')) {
-                            counter.textContent = Math.floor(current) + '%';
-                        } else {
-                            counter.textContent = Math.floor(current);
+    // 4. İşlem Türü Dağılımı (Pie Chart)
+    const typeCtx = document.getElementById('typeChart');
+    if (typeCtx) {
+        new Chart(typeCtx.getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: ['Tamamlanan', 'Kontrol Edilemedi'],
+                datasets: [{
+                    data: [7, 183],
+                    backgroundColor: [
+                        '#27ae60', // Yeşil - Tamamlanan
+                        '#e74c3c'  // Kırmızı - Bekleyen
+                    ],
+                    borderWidth: 3,
+                    borderColor: '#fff',
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 15,
+                            font: {
+                                size: 12,
+                                family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} araç (${percentage}%)`;
+                            }
                         }
                     }
-                }, 20);
-            });
+                }
+            }
         });
+    }
+}
+
+// Sayaç animasyonu fonksiyonu
+function animateCounters() {
+    const counters = document.querySelectorAll('.stat-value');
+    
+    counters.forEach(counter => {
+        const text = counter.textContent;
+        const hasPercent = text.includes('%');
+        const target = parseFloat(text.replace(/[^0-9.]/g, ''));
+        
+        if (isNaN(target)) return;
+        
+        const increment = target / 50;
+        let current = 0;
+        
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                if (hasPercent) {
+                    counter.textContent = target.toFixed(1) + '%';
+                } else {
+                    counter.textContent = Math.round(target);
+                }
+                clearInterval(timer);
+            } else {
+                if (hasPercent) {
+                    counter.textContent = current.toFixed(1) + '%';
+                } else {
+                    counter.textContent = Math.floor(current);
+                }
+            }
+        }, 20);
+    });
+}
+
+// Progress bar animasyonu
+window.addEventListener('load', function() {
+    const progressFills = document.querySelectorAll('.progress-fill');
+    progressFills.forEach(fill => {
+        const width = fill.style.width;
+        fill.style.width = '0';
+        setTimeout(() => {
+            fill.style.width = width;
+        }, 500);
+    });
+});
     </script>
 
 </body></html>
