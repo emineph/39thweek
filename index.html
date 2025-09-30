@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<!-- saved from url=(0181)file:///C:/Users/emine.pehlivan/Desktop/Raporlar/2025/2%20-%20Sal%C4%B1%20-%20GPS%20Kontrol/HTML/35.hafta/%F0%9F%9B%B0%EF%B8%8F%20GPS%20Durumu%2037.%20Hafta%20RaporuG%C3%9CNCEL.html -->
+<html lang="tr"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛰️ GPS Durumu 37. Hafta Raporu</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header .week-info {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stat-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-value.total { color: #3498db; }
+        .stat-value.completed { color: #27ae60; }
+        .stat-value.pending { color: #e74c3c; }
+        .stat-value.percentage { color: #f39c12; }
+        
+        .stat-subtitle {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+        
+        .table-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            overflow-x: auto;
+        }
+        
+        .table-container h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .chart-container h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1.3rem;
+        }
+        
+        .weekly-trend {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .trend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        
+        .trend-item:last-child {
+            border-bottom: none;
+        }
+        
+        .trend-week {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .trend-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .target-indicator {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 10px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .emoji {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛰️ GPS Durumu Haftalık Raporu</h1>
+            <div class="week-info">39. Hafta - Güncel Durum Raporu</div>
+            
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>📊 Toplam Araç</h3>
+                <div class="stat-value total">190</div>
+                <div class="stat-subtitle">Kontrol altındaki toplam araç sayısı</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>✅ Bu Hafta Tamamlanan</h3>
+                <div class="stat-value completed">7</div>
+                <div class="stat-subtitle">39. Hafta tamamlanan işlemler</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>⏳ Kontrol Edilemedi</h3>
+                <div class="stat-value pending">183</div>
+                <div class="stat-subtitle">Bekleyen işlem sayısı</div>
+            </div>
+            
+            <div class="stat-card">
+                <h3>📈 Tamamlanma Oranı</h3>
+                <div class="stat-value percentage">3.7%</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 3.26%"></div>
+                </div>
+                <div class="stat-subtitle">Hedef: %95</div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2>📊 39. Hafta Detaylı Durum Tablosu</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Kategori</th>
+                        <th>Toplam Araç</th>
+                        <th>Tamamlandı</th>
+                        <th>Kontrol Edilemedi</th>
+                        <th>Tamamlanma Oranı</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="emoji">🚛</span>Treyler</td>
+                        <td>117</td>
+                        <td>7</td>
+                        <td>110</td>
+                        <td>6.0%</td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span class="emoji">🚚</span>Şasi</td>
+                        <td>58</td>
+                        <td>0</td>
+                        <td>58</td>
+                        <td>0%</td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span class="emoji">📦</span>Swap Body</td>
+                        <td>12</td>
+                        <td>0</td>
+                        <td>12</td>
+                        <td>0%</td>
+                        
+                    </tr>
+                    <tr>
+                        <td><span class="emoji">📋</span>Konteyner</td>
+                        <td>3</td>
+                        <td>0</td>
+                        <td>3</td>
+                        <td>0%</td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="weekly-trend">
+            <h2>📈 Son 7 Hafta Tamamlanma Trendi</h2>
+            <div class="trend-item">
+                <div class="trend-week">39. Hafta (Bu Hafta)</div>
+                <div class="trend-value">7 tamamlandı</div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-week">38. Hafta</div>
+                <div class="trend-value">19 tamamlandı</div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-week">37. Hafta</div>
+                <div class="trend-value">7 tamamlandı</div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-week">36. Hafta</div>
+                <div class="trend-value">40 tamamlandı</div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-week">35. Hafta</div>
+                <div class="trend-value">49 tamamlandı</div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-week">34. Hafta</div>
+                <div class="trend-value">12 tamamlandı</div>
+            </div>
+            <div class="trend-item">
+                <div class="trend-week">33. Hafta</div>
+                <div class="trend-value">7 tamamlandı</div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3>📊 Kategori Bazında Dağılım</h3>
+                <canvas id="categoryChart" width="515" height="515" style="display: block; box-sizing: border-box; height: 515px; width: 515px;"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3>📈 Haftalık Tamamlanma Trendi</h3>
+                <canvas id="trendChart" width="515" height="386" style="display: block; box-sizing: border-box; height: 386px; width: 515px;"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3>🎯 Tamamlanma Oranları</h3>
+                <canvas id="completionChart" width="515" height="386" style="display: block; box-sizing: border-box; height: 386px; width: 515px;"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <h3>⚡ İşlem Türü Dağılımı</h3>
+                <canvas id="typeChart" width="515" height="515" style="display: block; box-sizing: border-box; height: 515px; width: 515px;"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Kategori Dağılım Grafiği
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Treyler', 'Şasi', 'Swap Body', 'Konteyner'],
+                datasets: [{
+                    data: [133, 67, 12, 3],
+                    backgroundColor: ['#3498db', '#e74c3c', '#f39c12', '#27ae60'],
+                    borderWidth: 3,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Haftalık Trend Grafiği
+        const trendCtx = document.getElementById('trendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['31.Hafta', '32.Hafta', '33.Hafta', '34.Hafta', '35.Hafta', '36.Hafta', '37.Hafta'],
+                datasets: [{
+                    label: 'Tamamlanan İşlemler',
+                    data: [25, 10, 7, 12, 49, 40, 7],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Tamamlanma Oranları
+        const completionCtx = document.getElementById('completionChart').getContext('2d');
+        new Chart(completionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Treyler', 'Şasi', 'Swap Body', 'Konteyner'],
+                datasets: [{
+                    label: 'Tamamlanma Oranı (%)',
+                    data: [1.50, 7.46, 0.00, 0.00],
+                    backgroundColor: ['#e74c3c', '#e74c3c', '#e74c3c', '#e74c3c'],
+                    borderColor: ['#c0392b', '#c0392b', '#c0392b', '#c0392b'],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // İşlem Türü Dağılımı
+        const typeCtx = document.getElementById('typeChart').getContext('2d');
+        new Chart(typeCtx, {
+            type: 'pie',
+            data: {
+                labels: ['Tamamlanan', 'Bekleyen'],
+                datasets: [{
+                    data: [7, 208],
+                    backgroundColor: ['#27ae60', '#e74c3c'],
+                    borderWidth: 3,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Sayaç animasyonu
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.stat-value');
+            
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/[^0-9.]/g, ''));
+                const increment = target / 50;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = counter.textContent;
+                        clearInterval(timer);
+                    } else {
+                        if (counter.textContent.includes('%')) {
+                            counter.textContent = Math.floor(current) + '%';
+                        } else {
+                            counter.textContent = Math.floor(current);
+                        }
+                    }
+                }, 20);
+            });
+        });
+    </script>
+
+</body></html>
